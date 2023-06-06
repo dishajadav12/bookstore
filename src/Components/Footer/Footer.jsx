@@ -1,23 +1,30 @@
-import { RoutePaths } from "../../Utils/enum"
-import { Link } from "react-router-dom"
-import siteLogo from "../../assets/tatvasoftLogo (1).svg"
-import footerStyles from "./FooterStyle.module.css"
-import { Typography } from "@mui/material"
-import CopyrightIcon from '@mui/icons-material/Copyright';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopyright } from '@fortawesome/free-solid-svg-icons'
-export const Footer = () => {
-    return(
-        <div className={footerStyles.footerContainer}>
-            <footer>
-                <Link to={RoutePaths.Login}>
-                    <img src={siteLogo} width="160" alt="tatvasoft.svg"></img>
+import React from "react";
+import { Link } from "react-router-dom";
+import { footerStyle } from "./footerStyle";
+import siteLogo from "../../assets/site-logo.png";
+
+const Footer = () => {
+  const classes = footerStyle();
+  return (
+    <div className={classes.footerWrapper}>
+      <footer className="site-footer" id="footer">
+        <div className="bottom-footer">
+          <div className="container">
+            <div className="text-center">
+              <div className="footer-logo">
+                <Link to="/" title="logo">
+                  <img src={siteLogo} alt="sitelogo" />
                 </Link>
-            </footer>
-            <div className={footerStyles.footerContent}>
-                <FontAwesomeIcon icon={faCopyright}/> 2015 TatvaSoft.com. All rights reserved.
+              </div>
+              <p className="copyright-text">
+                © 2015 Tatvasoft.com. All rights reserved.
+              </p>
             </div>
+          </div>
         </div>
-        
-    )
-}
+      </footer>
+    </div>
+  );
+};
+
+export default Footer;

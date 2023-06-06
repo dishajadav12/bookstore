@@ -8,7 +8,6 @@ const request = axios.create({
   // baseURL: "https://helperland1.azurewebsites.net/",
   // baseURL: "https://helperland1.azurewebsites.net/",
   //  baseURL: "http://192.168.1.20/",
-  // baseURL: "http://localhost:8000",
   timeout: 12400000,
   responseType: "json",
 });
@@ -20,13 +19,13 @@ let conflictRequest = "";
 request.interceptors.request.use(
   async (config) => {
     if (config.headers) {
-      config.headers["Content-Type"] = "application/json"; 
+      config.headers["Content-Type"] = "application/json";
     }
 
-    // if (config.headers["isDisableLoader"] !== true) {
-    //   requests.push(config.url);
-    //   showLoader();
-    // }
+    if (config.headers["isDisableLoader"] !== true) {
+      requests.push(config.url);
+      showLoader();
+    }
 
     return config;
   },
@@ -43,16 +42,9 @@ request.interceptors.response.use(
     console.log("responseeee,", response);
     removeRequest(response.config.url);
     if (data?.code && data?.code !== 200) {
-      toast.error(response.error ?? "Somthing went wrong. Please try again!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        });
+      toast.error(
+        response.data.error ?? "Somthing went wrong. Please try again!"
+      );
       return Promise.reject(new Error(data?.error || "Error"));
     } else {
       return Promise.resolve(response.data.result);
@@ -60,16 +52,7 @@ request.interceptors.response.use(
   },
   (error) => {
     removeRequest(error.config.url);
-    toast.error(error?.response?.data?.error ?? "Somthing went wrong", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-      });
+    toast.error(error?.response?.data?.error ?? "Somthing went wrong");
     return Promise.reject(error);
   }
 );
@@ -88,11 +71,11 @@ function removeRequest(req) {
   if (i >= 0) {
     requests.splice(i, 1);
   }
-//   if (requests.length > 0) {
-//     showLoader();
-//   } else {
-//     hideLoader();
-//   }
+  if (requests.length > 0) {
+    showLoader();
+  } else {
+    hideLoader();
+  }
   if (req === conflictRequest) {
     conflictRequest = "";
     requests = requests.filter((request) => request !== req);
